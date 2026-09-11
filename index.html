@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fydz Official — Ultimate Interactive Developer Portfolio & Hub v12</title>
+    <!-- FontAwesome 6 Pro & Google Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root[data-theme="dark"] {
+            --bg-dark: #06080d;
+            --bg-secondary: #0b0f19;
+            --card-bg: rgba(15, 20, 32, 0.85);
+            --card-bg-hover: rgba(22, 29, 46, 0.95);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --accent-purple: #7928ca;
+            --accent-pink: #ff007f;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-muted: #64748b;
+            --input-bg: rgba(255, 255, 255, 0.04);
+            --modal-bg: rgba(8, 12, 20, 0.96);
+            --shadow-color: rgba(0, 0, 0, 0.6);
+            --code-bg: #05080e;
+        }
+
+        :root[data-theme="light"] {
+            --bg-dark: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-bg-hover: rgba(248, 250, 252, 1);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --accent-cyan: #0284c7;
+            --accent-blue: #2563eb;
+            --accent-purple: #6b21a8;
+            --accent-pink: #db2777;
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --text-muted: #94a3b8;
+            --input-bg: rgba(0, 0, 0, 0.03);
+            --modal-bg: rgba(255, 255, 255, 0.98);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --code-bg: #1e293b;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 4px;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 120px;
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 0% 100%, rgba(121, 40, 202, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Ripple Animation */
+        .ripple { position: relative; overflow: hidden; }
+        .ripple-effect {
+            position: absolute; border-radius: 50%;
+            background: rgba(0, 242, 254, 0.35); transform: scale(0);
+            animation: ripple-anim 0.6s linear; pointer-events: none;
+        }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+
+        /* Cursor Glow */
+        .cursor-glow {
+            position: fixed; top: 0; left: 0; width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, rgba(121, 40, 202, 0) 70%);
+            border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
+            z-index: 1; transition: transform 0.05s ease-out;
+        }
+
+        /* Hero Banner Area */
+        .hero-banner {
+            width: 100%; height: 360px; position: relative;
+            background: linear-gradient(180deg, rgba(6, 8, 13, 0.3) 0%, var(--bg-dark) 100%), 
+                        url('https://files.catbox.moe/fn0ckj.png');
+            background-size: cover; background-position: center;
+            display: flex; align-items: flex-start; justify-content: flex-end;
+            padding: 24px; border-bottom: 1px solid var(--card-border); overflow: hidden;
+        }
+
+        #particleCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .top-controls { display: flex; align-items: center; gap: 12px; z-index: 20; flex-wrap: wrap; justify-content: flex-end; }
+
+        .widget-box {
+            background: var(--card-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 30px;
+            color: var(--text-main); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+            display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px var(--shadow-color);
+        }
+
+        .theme-btn {
+            background: var(--card-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border); width: 42px; height: 42px;
+            border-radius: 50%; color: var(--text-main); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+        .theme-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); transform: scale(1.05); }
+
+        .wrapper { max-width: 1320px; margin: 0 auto; padding: 0 20px; width: 100%; position: relative; z-index: 10; }
+        .dashboard-grid { display: grid; grid-template-columns: 360px 1fr; gap: 32px; margin-top: -70px; }
+        
+        .tilt-card { transform-style: preserve-3d; transition: transform 0.2s ease, box-shadow 0.3s ease; }
+
+        /* Profile Sidebar */
+        .profile-card {
+            background: var(--card-bg); backdrop-filter: blur(25px);
+            border: 1px solid var(--card-border); border-radius: 28px;
+            padding: 32px 26px; text-align: center; box-shadow: 0 20px 50px var(--shadow-color);
+            position: sticky; top: 24px; height: fit-content;
+        }
+
+        .avatar-box {
+            width: 130px; height: 130px; border-radius: 50%; margin: 0 auto 18px;
+            position: relative; padding: 5px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-pink));
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.35); animation: floatAvatar 4s ease-in-out infinite;
+        }
+        @keyframes floatAvatar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .avatar-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #000; }
+
+        .discord-status {
+            display: inline-flex; align-items: center; gap: 8px; background: rgba(88, 101, 242, 0.12);
+            border: 1px solid rgba(88, 101, 242, 0.3); color: #5865F2; font-size: 0.78rem;
+            padding: 6px 14px; border-radius: 16px; margin-bottom: 14px; font-family: 'JetBrains Mono', monospace; font-weight: 600;
+        }
+        .discord-dot { width: 8px; height: 8px; background-color: #23a55a; border-radius: 50%; box-shadow: 0 0 10px #23a55a; }
+
+        .profile-card h1 { font-size: 1.75rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
+        .role-typing { color: var(--accent-cyan); font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; min-height: 26px; }
+        .profile-card .bio-text { color: var(--text-sub); font-size: 0.88rem; margin-bottom: 24px; line-height: 1.65; }
+
+        .info-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; text-align: left; }
+        .info-item { display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; padding: 8px 12px; background: var(--input-bg); border-radius: 10px; border: 1px solid var(--card-border); }
+        .info-item span { color: var(--text-sub); }
+        .info-item strong { color: var(--text-main); font-family: 'JetBrains Mono', monospace; }
+
+        .social-stack { display: flex; flex-direction: column; gap: 10px; }
+        .social-btn {
+            display: flex; align-items: center; gap: 12px; background: var(--input-bg);
+            border: 1px solid var(--card-border); padding: 12px 18px; border-radius: 14px;
+            color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+        }
+        .social-btn i { font-size: 1.15rem; color: var(--accent-cyan); width: 24px; text-align: center; }
+        .social-btn:hover { background: rgba(0, 242, 254, 0.12); border-color: var(--accent-cyan); transform: translateX(4px); }
+
+        /* Content Area */
+        .content-area { display: flex; flex-direction: column; gap: 32px; }
+        .section-title { font-size: 1.25rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .section-title i { color: var(--accent-cyan); background: rgba(0, 242, 254, 0.1); padding: 12px; border-radius: 14px; font-size: 1.1rem; border: 1px solid rgba(0, 242, 254, 0.2); }
+
+        .card-box {
+            background: var(--card-bg); backdrop-filter: blur(25px);
+            border: 1px solid var(--card-border); border-radius: 22px; padding: 28px;
+            box-shadow: 0 10px 35px var(--shadow-color); display: flex; flex-direction: column; gap: 18px;
+        }
+
+        /* Tech Stack Grid */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; }
+        .skill-item {
+            background: var(--input-bg); border: 1px solid var(--card-border);
+            padding: 14px; border-radius: 14px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            font-size: 0.8rem; font-weight: 700; color: var(--text-main);
+        }
+        .skill-item i { font-size: 1.8rem; color: var(--accent-cyan); }
+        .skill-item:hover { border-color: var(--accent-cyan); transform: translateY(-3px); }
+
+        /* Multi-Tab Filter Projects */
+        .tab-controls { display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 6px; }
+        .tab-btn {
+            background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-sub);
+            padding: 8px 18px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+        }
+        .tab-btn.active { background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan); }
+
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+        .project-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .project-card:hover { border-color: var(--accent-cyan); background: var(--card-bg-hover); transform: translateY(-4px); }
+        .project-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        
+        .status-badge {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 4px 12px; border-radius: 10px; font-weight: 700;
+        }
+        .status-active { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .status-dev { background: rgba(234, 179, 8, 0.15); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.3); }
+
+        .btn-launch {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(121, 40, 202, 0.15));
+            border: 1px solid var(--accent-cyan); color: var(--text-main); padding: 12px 18px;
+            border-radius: 14px; text-decoration: none; font-size: 0.88rem; font-weight: 700; margin-top: 18px;
+        }
+        .btn-launch:hover { background: var(--accent-cyan); color: #000; }
+
+        /* Code Snippet Box */
+        .code-box {
+            background: var(--code-bg); border: 1px solid var(--card-border); border-radius: 16px;
+            padding: 18px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; position: relative; overflow-x: auto;
+        }
+        .code-box pre { color: #38bdf8; }
+        .btn-copy-code {
+            position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.1);
+            border: 1px solid var(--card-border); color: var(--text-main); padding: 6px 12px;
+            border-radius: 10px; font-size: 0.75rem; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+        }
+        .btn-copy-code:hover { background: var(--accent-cyan); color: #000; }
+
+        /* Live Terminal Console Log Simulator */
+        .console-box {
+            background: #04060a; border: 1px solid var(--card-border); border-radius: 16px;
+            padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; height: 160px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 6px; color: #a7f3d0;
+        }
+
+        /* Services & Pricing Table */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+        .price-card {
+            background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 20px;
+            display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
+        }
+        .price-card:hover { border-color: var(--accent-cyan); }
+        .price-card h4 { font-size: 1.05rem; color: var(--text-main); }
+        .price-card .price { font-size: 1.3rem; font-weight: 800; color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace; }
+        .price-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; color: var(--text-sub); }
+        .price-card ul li { display: flex; align-items: center; gap: 8px; }
+        .price-card ul li i { color: #22c55e; }
+
+        /* FAQ Accordion Dropdown */
+        .faq-item {
+            border: 1px solid var(--card-border); border-radius: 14px; overflow: hidden; background: var(--input-bg);
+        }
+        .faq-question {
+            padding: 16px 20px; font-weight: 700; font-size: 0.92rem; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center; color: var(--text-main);
+        }
+        .faq-answer {
+            padding: 0 20px 16px; font-size: 0.86rem; color: var(--text-sub); display: none; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 8px; padding-top: 14px;
+        }
+        .faq-item.active .faq-answer { display: block; }
+        .faq-item.active .faq-question i { transform: rotate(180deg); color: var(--accent-cyan); }
+
+        /* WhatsApp Generator Form */
+        .wa-form { display: flex; flex-direction: column; gap: 14px; }
+        .wa-form input, .wa-form select, .wa-form textarea {
+            background: var(--input-bg); border: 1px solid var(--card-border);
+            padding: 14px 18px; border-radius: 14px; color: var(--text-main); font-size: 0.88rem; outline: none;
+        }
+        .wa-form input:focus, .wa-form select:focus, .wa-form textarea:focus { border-color: var(--accent-cyan); }
+        .wa-form button {
+            background: linear-gradient(90deg, #25D366, #128C7E); color: #fff;
+            border: none; padding: 14px; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 0.92rem;
+            display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35);
+        }
+
+        /* Spotify Music Player Floating Widget */
+        .spotify-player {
+            position: fixed; bottom: 24px; right: 24px; z-index: 1000;
+            background: var(--card-bg); backdrop-filter: blur(25px);
+            border: 1px solid var(--accent-cyan); border-radius: 50px;
+            padding: 8px 20px 8px 10px; display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 12px 35px rgba(0, 242, 254, 0.25);
+        }
+        .album-art {
+            width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
+            animation: spinArt 6s linear infinite; animation-play-state: paused; border: 2px solid var(--accent-cyan);
+        }
+        @keyframes spinArt { 100% { transform: rotate(360deg); } }
+        .player-info { display: flex; flex-direction: column; }
+        .track-title { font-size: 0.8rem; font-weight: 700; color: var(--text-main); max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .track-artist { font-size: 0.68rem; color: var(--text-sub); }
+        .player-btn {
+            background: var(--accent-cyan); border: none; width: 34px; height: 34px;
+            border-radius: 50%; color: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+        }
+
+        /* Floating CLI Button */
+        .cli-btn {
+            position: fixed; bottom: 90px; right: 24px;
+            background: var(--card-bg); border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan); padding: 10px 20px; border-radius: 30px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; cursor: pointer; z-index: 99;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        /* CLI Terminal Modal */
+        .cli-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000;
+            display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: all 0.25s ease; padding: 20px;
+        }
+        .cli-modal.active { opacity: 1; pointer-events: auto; }
+        .cli-window {
+            width: 100%; max-width: 650px; height: 420px; background: #060911;
+            border: 1px solid var(--accent-cyan); border-radius: 18px; display: flex; flex-direction: column; font-family: 'JetBrains Mono', monospace; overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.25);
+        }
+        .cli-header { background: #0f172a; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; color: var(--accent-cyan); font-size: 0.85rem; border-bottom: 1px solid var(--card-border); }
+        .cli-body { flex: 1; padding: 16px; overflow-y: auto; color: #38bdf8; font-size: 0.82rem; display: flex; flex-direction: column; gap: 8px; }
+        .cli-input-row { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #0b1120; border-top: 1px solid var(--card-border); }
+        .cli-input-row input { flex: 1; background: none; border: none; outline: none; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--accent-cyan); color: #06080d; padding: 12px 26px; border-radius: 30px;
+            font-weight: 800; font-size: 0.88rem; opacity: 0; transition: all 0.3s ease; z-index: 3000;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        footer { text-align: center; margin-top: 50px; color: var(--text-sub); font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
+
+        @media (max-width: 992px) {
+            .dashboard-grid { grid-template-columns: 1fr; margin-top: -50px; }
+            .profile-card { position: relative; top: 0; }
+            .hero-banner { height: 260px; }
+            .cursor-glow { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Header Banner Area -->
+    <header class="hero-banner">
+        <canvas id="particleCanvas"></canvas>
+        <div class="top-controls">
+            <div class="widget-box"><i class="fa-solid fa-wifi" style="color:#22c55e;"></i> <span id="pingValue">18 ms</span></div>
+            <div class="widget-box"><i class="fa-regular fa-clock"></i> <span id="liveClock">00:00:00 WIB</span></div>
+            <button class="theme-btn ripple" id="themeToggle" title="Ganti Tema"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        </div>
+    </header>
+
+    <div class="wrapper">
+        <div class="dashboard-grid">
+            
+            <!-- Sidebar Profil -->
+            <aside class="profile-card tilt-card">
+                <div class="avatar-box">
+                    <img src="https://files.catbox.moe/t7xi5c.png" alt="Fydz Official Avatar">
+                </div>
+                
+                <div class="discord-status">
+                    <span class="discord-dot"></span> Discord Online
+                </div>
+
+                <h1>Fydz Official</h1>
+                <div class="role-typing" id="roleText"></div>
+
+                <p class="bio-text">
+                    Siswa SMK Kelas 10 TMI 1 (Teknik Mekanik Industri). Programmer web & bot enthusiast yang berfokus pada arsitektur Backend Node.js, Express, & Pterodactyl Panel Management.
+                </p>
+
+                <div class="info-list">
+                    <div class="info-item"><span>Status</span> <strong>Pelajar / Dev</strong></div>
+                    <div class="info-item"><span>Jurusan</span> <strong>10 TMI 1</strong></div>
+                    <div class="info-item"><span>Fokus</span> <strong>Node.js & Bots</strong></div>
+                    <div class="info-item"><span>Lokasi</span> <strong>Indonesia 🇮🇩</strong></div>
+                </div>
+
+                <div class="social-stack">
+                    <a href="https://wa.me/+6283120264665" target="_blank" class="social-btn ripple"><i class="fa-brands fa-whatsapp"></i> Chat WhatsApp</a>
+                    <a href="https://t.me/FydzSpyder" target="_blank" class="social-btn ripple"><i class="fa-brands fa-telegram"></i> Telegram Direct</a>
+                    <a href="https://www.tiktok.com/@rafid_bjp01" target="_blank" class="social-btn ripple"><i class="fa-brands fa-tiktok"></i> TikTok Profile</a>
+                    <a href="https://www.instagram.com/_rafzz24" target="_blank" class="social-btn ripple"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                    <div class="social-btn ripple" onclick="copyToClipboard('rafidmurizki08@gmail.com')"><i class="fa-solid fa-envelope"></i> Salin Email</div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="content-area">
+
+                <!-- Biografi Lengkap & Fokus -->
+                <section class="card-box tilt-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-user-gear"></i> Perjalanan & Fokus Pengembangan
+                    </div>
+                    <p style="font-size: 0.9rem; color: var(--text-sub); line-height: 1.75;">
+                        Selamat datang di portofolio resmi <strong>Fydz Official</strong>. Saya aktif membuat tools otomatisasi berbasis Node.js, mengelola web dashboard interaktif, serta merancang arsitektur server Pterodactyl untuk berbagai kebutuhan bot Telegram/WhatsApp dan deployment script web di lingkungan Termux maupun Cloud hosting.
+                    </p>
+                    <p style="font-size: 0.9rem; color: var(--text-sub); line-height: 1.75;">
+                        Dengan kombinasi pengalaman praktis di bidang script automation dan manajemen server virtual, saya berdedikasi membangun layanan digital yang cepat, tangguh, dan mudah digunakan.
+                    </p>
+                </section>
+
+                <!-- Live Server Console Simulator -->
+                <section class="card-box tilt-card">
+                    <div class="section-title">
+                        <i class="fa-solid fa-terminal"></i> Terminal Console Output (Live)
+                    </div>
+                    <div class="console-box" id="liveConsole">
+                        <div>[SYSTEM] Initializing Fydz Developer Environment v12.0...</div>
+                        <div>[INFO] Connected to Pterodactyl Node: ID-SERVER-01</div>
+                        <div>[SERVER] Express Engine running on port 3000 (HTTP/2)</div>
+                    </div>
+                </section>
+
+                <!-- Skillset & Tech Stack -->
+                <section>
+                    <div class="section-title">
+                        <i class="fa-solid fa-layer-group"></i> Tech Stack & Keahlian
+                    </div>
+                    <div class="skills-grid">
+                        <div class="skill-item"><i class="fa-brands fa-node-js"></i> Node.js</div>
+                        <div class="skill-item"><i class="fa-solid fa-server"></i> Express.js</div>
+                        <div class="skill-item"><i class="fa-brands fa-html5"></i> HTML5 / CSS3</div>
+                        <div class="skill-item"><i class="fa-brands fa-square-js"></i> JavaScript</div>
+                        <div class="skill-item"><i class="fa-solid fa-terminal"></i> Termux CLI</div>
+                        <div class="skill-item"><i class="fa-solid fa-cubes"></i> Pterodactyl</div>
+                        <div class="skill-item"><i class="fa-brands fa-git-alt"></i> Git Version</div>
+                        <div class="skill-item"><i class="fa-solid fa-cloud"></i> Cloudflare</div>
+                        <div class="skill-item"><i class="fa-solid fa-fire"></i> Firebase DB</div>
+                        <div class="skill-item"><i class="fa-solid fa-network-wired"></i> REST APIs</div>
+                    </div>
+                </section>
+
+                <!-- Multi-Tab Proyek Utama -->
+                <section>
+                    <div class="section-title">
+                        <i class="fa-solid fa-code-branch"></i> Showcase Proyek & Tools
+                    </div>
+
+                    <div class="tab-controls">
+                        <button class="tab-btn active" onclick="filterTab('all', this)">Semua Proyek</button>
+                        <button class="tab-btn" onclick="filterTab('web', this)">Web Applications</button>
+                        <button class="tab-btn" onclick="filterTab('tools', this)">Tools & Services</button>
+                    </div>
+
+                    <div class="projects-grid">
+                        <div class="project-card tilt-card" data-category="tools">
+                            <div>
+                                <div class="project-header-row">
+                                    <span class="status-badge status-active">ACTIVE ✅</span>
+                                </div>
+                                <h3 style="font-size: 1.15rem; color: var(--text-main);">Order Panel Pterodactyl</h3>
+                                <p style="font-size: 0.85rem; color: var(--text-sub); margin-top: 8px;">
+                                    Website layanan otomatisasi pemesanan server panel Pterodactyl secara instan & online 24 jam dengan integrasi payment gateway.
+                                </p>
+                            </div>
+                            <a href="https://auto-order-panel-taupe.vercel.app/" target="_blank" class="btn-launch ripple">
+                                Buka Website <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+
+                        <div class="project-card tilt-card" data-category="web">
+                            <div>
+                                <div class="project-header-row">
+                                    <span class="status-badge status-active">ACTIVE ✅</span>
+                                </div>
+                                <h3 style="font-size: 1.15rem; color: var(--text-main);">All Tools Rimuru</h3>
+                                <p style="font-size: 0.85rem; color: var(--text-sub); margin-top: 8px;">
+                                    Multi-functional web dashboard yang menyediakan bermacam utilitas canvas generator, downloader, & REST API tools interaktif.
+                                </p>
+                            </div>
+                            <a href="https://all-tools-rimuru.web.id" target="_blank" class="btn-launch ripple">
+                                Buka Website <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Services & Pricing Cards -->
+                <section>
+                    <div class="section-title">
+                        <i class="fa-solid fa-tags"></i> Layanan & Estimasi Biaya
+                    </div>
+                    <div class="pricing-grid">
+                        <div class="price-card tilt-card">
+                            <div>
+                                <h4>Sewa Panel Pterodactyl</h4>
+                                <div class="price">Rp 5.000 <span style="font-size:0.75rem; color:var(--text-sub);">/bln</span></div>
+                            </div>
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i> RAM 1GB - Unli RAM</li>
+                                <li><i class="fa-solid fa-check"></i> CPU Core Tinggi</li>
+                                <li><i class="fa-solid fa-check"></i> Uptime Server 99.9%</li>
+                            </ul>
+                            <a href="https://wa.me/+6283120264665?text=Halo%20Fydz,%20saya%20mau%20sewa%20Panel%20Pterodactyl" target="_blank" class="social-btn ripple" style="justify-content:center; text-align:center;">Pesan Sekarang</a>
+                        </div>
+
+                        <div class="price-card tilt-card">
+                            <div>
+                                <h4>Setup Bot WhatsApp/Tele</h4>
+                                <div class="price">Konsultasi</div>
+                            </div>
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i> Deployment Script Node.js</li>
+                                <li><i class="fa-solid fa-check"></i> Integrasi REST API</li>
+                                <li><i class="fa-solid fa-check"></i> Anti-Delay & Stabil</li>
+                            </ul>
+                            <a href="https://wa.me/+6283120264665?text=Halo%20Fydz,%20saya%20mau%20konsultasi%20Bot" target="_blank" class="social-btn ripple" style="justify-content:center; text-align:center;">Konsultasi</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Code Sandbox & Panduan Deployment -->
+                <section>
+                    <div class="section-title">
+                        <i class="fa-solid fa-laptop-code"></i> Code Sandbox & Guide Termux
+                    </div>
+                    <div class="card-box tilt-card">
+                        <p style="font-size: 0.88rem; color: var(--text-sub);">
+                            Langkah cepat menjalankan Express.js Server di aplikasi Termux Android:
+                        </p>
+                        <div class="code-box">
+                            <button class="btn-copy-code" onclick="copyToClipboard('pkg update && pkg upgrade -y\npkg install nodejs git -y\nmkdir my-server && cd my-server\nnpm init -y\nnpm install express\nnode index.js')"><i class="fa-regular fa-copy"></i> Salin Command</button>
+                            <pre><code># 1. Update paket & Install Node.js
+pkg update && pkg upgrade -y
+pkg install nodejs git -y
+
+# 2. Buat folder proyek & jalankan npm init
+mkdir my-server && cd my-server
+npm init -y
+npm install express
+
+# 3. Jalankan aplikasi Express
+node index.js</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FAQ Dropdown Accordion -->
+                <section>
+                    <div class="section-title">
+                        <i class="fa-solid fa-circle-question"></i> Pertanyaan Umum (FAQ)
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-question">
+                                <span>Bagaimana cara melakukan kerjasama atau pemesanan?</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Kamu bisa langsung menghubungi saya melalui WhatsApp atau Telegram official yang tertera pada profil. Pembayaran mendukung QRIS, E-Wallet (Dana/Gopay/OVO), & Bank.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-question">
+                                <span>Apakah menerima kustomisasi skrip bot khusus?</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Ya, saya menerima kustomisasi skrip bot WhatsApp/Telegram, integrasi REST API kustom, dan tata kelola panel server Pterodactyl sesuai spesifikasi yang kamu butuhkan.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-question">
+                                <span>Apakah server Pterodactyl cocok untuk Bot WhatsApp/Telegram?</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Sangat cocok! Panel Pterodactyl dirancang agar script berjalan online 24/7 tanpa menggunakan daya atau baterai dari HP kamu secara langsung.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Form WhatsApp Message Generator -->
+                <section>
+                    <div class="section-title">
+                        <i class="fa-solid fa-paper-plane"></i> Kirim Pesan Cepat ke WhatsApp
+                    </div>
+                    <div class="card-box tilt-card">
+                        <form class="wa-form" onsubmit="sendWAMessage(event)">
+                            <input type="text" id="waName" placeholder="Nama Kamu..." required>
+                            <select id="waTopic">
+                                <option value="Diskusi Kodingan / Node.js">Diskusi Kodingan / Node.js</option>
+                                <option value="Pembuatan Bot / Website">Pembuatan Bot / Website</option>
+                                <option value="Sewa / Pertanyaan Pterodactyl">Sewa / Pertanyaan Pterodactyl</option>
+                                <option value="Topik Lainnya">Topik Lainnya</option>
+                            </select>
+                            <textarea id="waMessage" rows="3" placeholder="Tuliskan isi pesan kamu secara ringkas..." required></textarea>
+                            <button type="submit" class="ripple"><i class="fa-brands fa-whatsapp"></i> Formatkan & Kirim ke WhatsApp</button>
+                        </form>
+                    </div>
+                </section>
+
+                <footer>
+                    &copy; 2026 Fydz Official — Dibuat & dikembangkan secara mandiri untuk portofolio digital.
+                </footer>
+
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Mini Spotify-Style Music Player -->
+    <div class="spotify-player">
+        <img src="https://files.catbox.moe/t7xi5c.png" class="album-art" id="albumArt" alt="Art">
+        <div class="player-info">
+            <span class="track-title" id="trackTitle">Lofi Background Track</span>
+            <span class="track-artist">Fydz Chill Audio</span>
+        </div>
+        <button class="player-btn ripple" id="playPauseBtn"><i class="fa-solid fa-play" id="playIcon"></i></button>
+        <button class="player-btn ripple" onclick="nextTrack()" style="background:var(--input-bg); color:var(--text-main);"><i class="fa-solid fa-forward"></i></button>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating CLI Button -->
+    <button class="cli-btn ripple" onclick="toggleCLI()"><i class="fa-solid fa-terminal"></i> CLI Terminal</button>
+
+    <!-- CLI Terminal Modal -->
+    <div class="cli-modal" id="cliModal">
+        <div class="cli-window">
+            <div class="cli-header">
+                <span>Fydz Terminal Shell v2.8</span>
+                <button onclick="toggleCLI()" style="background:none; border:none; color:#fff; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="cli-body" id="cliBody">
+                <div>Selamat datang di Fydz CLI Terminal. Ketik <strong style="color:var(--accent-cyan);">'help'</strong> untuk melihat daftar perintah.</div>
+            </div>
+            <div class="cli-input-row">
+                <span style="color:var(--accent-cyan)">root@fydz:~$</span>
+                <input type="text" id="cliInput" placeholder="Ketik perintah di sini..." autocomplete="off">
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">Teks berhasil disalin!</div>
+
+    <script>
+        // 1. Ripple Click Effect
+        document.addEventListener('click', function (e) {
+            const target = e.target.closest('.ripple');
+            if (target) {
+                const rect = target.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple-effect';
+                ripple.style.left = `${e.clientX - rect.left}px`;
+                ripple.style.top = `${e.clientY - rect.top}px`;
+                target.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
+
+        // 2. Cursor Glow Tracking
+        const glow = document.getElementById('cursorGlow');
+        if (window.innerWidth > 992) {
+            document.addEventListener('mousemove', (e) => {
+                glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px';
+            });
+        }
+
+        // 3. Typing Effect Role Text
+        const roles = ["< Backend Developer />", "< Node.js Enthusiast />", "< Siswa SMK 10 TMI 1 />", "< Pterodactyl SysAdmin />"];
+        let roleIdx = 0, charIdx = 0, isDeleting = false;
+        const roleEl = document.getElementById('roleText');
+
+        function typeRole() {
+            const current = roles[roleIdx];
+            if (isDeleting) roleEl.textContent = current.substring(0, charIdx--);
+            else roleEl.textContent = current.substring(0, charIdx++);
+
+            let typeSpeed = isDeleting ? 35 : 75;
+            if (!isDeleting && charIdx === current.length + 1) {
+                typeSpeed = 1800; isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false; roleIdx = (roleIdx + 1) % roles.length; typeSpeed = 400;
+            }
+            setTimeout(typeRole, typeSpeed);
+        }
+        typeRole();
+
+        // 4. Live Clock WIB & Dynamic Ping
+        setInterval(() => {
+            document.getElementById('liveClock').textContent = new Date().toLocaleTimeString('id-ID', { hour12: false }) + ' WIB';
+        }, 1000);
+        setInterval(() => {
+            document.getElementById('pingValue').textContent = (Math.floor(Math.random() * 8) + 16) + " ms";
+        }, 3000);
+
+        // 5. Theme Switcher (Dark/Light)
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            document.getElementById('themeIcon').className = next === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+        });
+
+        // 6. FAQ Accordion Toggle
+        function toggleFAQ(element) {
+            element.classList.toggle('active');
+        }
+
+        // 7. Multi-Tab Portfolio Filter
+        function filterTab(category, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 8. Live Terminal Console Log Simulator
+        const consoleBox = document.getElementById('liveConsole');
+        const logs = [
+            "[HTTP] GET /api/v1/status 200 OK - 12ms",
+            "[WEBSOCKET] Client connected: ID_88329",
+            "[PTERODACTYL] Node status: Operational (CPU: 12%, MEM: 38%)",
+            "[FIREBASE] Database synchronized successfully",
+            "[BOT_ENGINE] WhatsApp Session Active & Listening..."
+        ];
+        let logIdx = 0;
+        setInterval(() => {
+            const newLog = document.createElement('div');
+            newLog.textContent = `[${new Date().toLocaleTimeString('id-ID')}] ${logs[logIdx]}`;
+            consoleBox.appendChild(newLog);
+            consoleBox.scrollTop = consoleBox.scrollHeight;
+            logIdx = (logIdx + 1) % logs.length;
+        }, 4000);
+
+        // 9. WhatsApp Generator
+        function sendWAMessage(e) {
+            e.preventDefault();
+            const name = document.getElementById('waName').value;
+            const topic = document.getElementById('waTopic').value;
+            const msg = document.getElementById('waMessage').value;
+            
+            const text = `Halo Fydz, saya *${name}*.\n*Topik:* ${topic}\n\n*Pesan:*\n${msg}`;
+            const url = `https://wa.me/+6283120264665?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        // 10. Custom Audio Player
+        const music = document.getElementById('bgMusic');
+        const playBtn = document.getElementById('playPauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        const albumArt = document.getElementById('albumArt');
+        let isPlaying = false;
+
+        const tracks = [
+            { title: "Lofi Background Track", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { title: "Cyberpunk Chill Beats", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" }
+        ];
+        let currentTrack = 0;
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                music.pause(); playIcon.className = 'fa-solid fa-play';
+                albumArt.style.animationPlayState = 'paused';
+            } else {
+                music.play(); playIcon.className = 'fa-solid fa-pause';
+                albumArt.style.animationPlayState = 'running';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % tracks.length;
+            music.src = tracks[currentTrack].src;
+            document.getElementById('trackTitle').textContent = tracks[currentTrack].title;
+            if (isPlaying) music.play();
+        }
+
+        // 11. Toast Notification & Copy Text
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        // 12. CLI Interactive Terminal
+        function toggleCLI() { document.getElementById('cliModal').classList.toggle('active'); }
+        const cliInput = document.getElementById('cliInput');
+        const cliBody = document.getElementById('cliBody');
+
+        cliInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = cliInput.value.trim().toLowerCase();
+                const line = document.createElement('div');
+                line.innerHTML = `<span style="color:var(--accent-cyan)">root@fydz:~$</span> ${cliInput.value}`;
+                cliBody.appendChild(line);
+                cliInput.value = '';
+
+                let reply = document.createElement('div');
+                reply.style.color = '#e2e8f0';
+
+                if (cmd === 'help') reply.textContent = 'Perintah tersedia: help, clear, ping, projects, contact, skills, status';
+                else if (cmd === 'ping') reply.textContent = 'Pong! Server & API responsif.';
+                else if (cmd === 'projects') reply.textContent = '1. Order Panel Pterodactyl | 2. All Tools Rimuru';
+                else if (cmd === 'contact') reply.textContent = 'WA: +6283120264665 | Telegram: @FydzSpyder';
+                else if (cmd === 'skills') reply.textContent = 'Node.js, Express, JavaScript, Termux, Pterodactyl, HTML/CSS, Git, Firebase';
+                else if (cmd === 'status') reply.textContent = 'System Status: All Services Operational (100% Uptime)';
+                else if (cmd === 'clear') { cliBody.innerHTML = ''; return; }
+                else { reply.style.color = '#ef4444'; reply.textContent = `Command tidak dikenal: '${cmd}'`; }
+
+                cliBody.appendChild(reply);
+                cliBody.scrollTop = cliBody.scrollHeight;
+            }
+        });
+
+        // 13. Canvas Background Particles
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+        let particles = [];
+        for (let i = 0; i < 25; i++) {
+            particles.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5 + 1, dx: (Math.random() - 0.5) * 0.5, dy: (Math.random() - 0.5) * 0.5
+            });
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 242, 254, 0.35)';
+            particles.forEach(p => {
+                p.x += p.dx; p.y += p.dy;
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
