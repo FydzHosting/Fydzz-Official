@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fydz Official — Cyber Portfolio & Services</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --bg-dark: #07090e;
+            --card-bg: rgba(18, 22, 33, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #00f2fe;
+            --accent-purple: #7928ca;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --modal-bg: rgba(10, 14, 23, 0.95);
+        }
+
+        :root[data-theme="light"] {
+            --bg-dark: #f4f6fc;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --accent-cyan: #0088cc;
+            --accent-purple: #6b21a8;
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --input-bg: rgba(0, 0, 0, 0.04);
+            --modal-bg: rgba(255, 255, 255, 0.98);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        /* Custom Cyber Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 4px;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        /* Mouse Glow Follower */
+        .cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, rgba(121, 40, 202, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            transition: transform 0.05s ease-out;
+        }
+
+        /* Announcement Bar */
+        .announcement-bar {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            color: #fff;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 100;
+        }
+
+        .announcement-content {
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .announcement-bar button {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            width: 100%;
+            height: 380px;
+            position: relative;
+            background: linear-gradient(180deg, rgba(7, 9, 14, 0.3) 0%, var(--bg-dark) 100%), 
+                        url('https://files.catbox.moe/fn0ckj.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 20px;
+            border-bottom: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 20;
+            flex-wrap: wrap;
+        }
+
+        .widget-box {
+            background: rgba(18, 22, 33, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            padding: 8px 14px;
+            border-radius: 30px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-btn {
+            background: rgba(18, 22, 33, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* Layout Grid */
+        .wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 30px;
+            margin-top: -80px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+            will-change: transform;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 24px;
+            height: fit-content;
+        }
+
+        .avatar-box {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
+            animation: pulseGlow 4s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
+            100% { box-shadow: 0 0 35px rgba(121, 40, 202, 0.6); }
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            color: var(--accent-cyan);
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-cyan);
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0.3; } }
+
+        .profile-card h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .role-typing {
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 24px;
+        }
+
+        .profile-card .bio-text {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            text-align: justify;
+            margin-bottom: 24px;
+        }
+
+        .social-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn i {
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            width: 20px;
+            text-align: center;
+        }
+
+        .social-btn:hover {
+            background: rgba(0, 242, 254, 0.15);
+            border-color: var(--accent-cyan);
+            transform: translateX(6px);
+        }
+
+        /* Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .stat-info h4 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
+        .stat-info p { font-size: 0.8rem; color: var(--text-sub); }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            color: var(--accent-cyan);
+            background: rgba(0, 242, 254, 0.1);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        /* Filter Pills */
+        .filter-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-sub);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-pill.active, .filter-pill:hover {
+            background: rgba(0, 242, 254, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 240px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            padding: 10px 16px 10px 40px;
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-sub);
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .project-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .project-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 242, 254, 0.08);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .star-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-sub);
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .star-btn.starred {
+            color: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .btn-launch {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(121, 40, 202, 0.1));
+            border: 1px solid var(--accent-cyan);
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .btn-launch:hover {
+            background: var(--accent-cyan);
+            color: #07090e;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+        }
+
+        /* Skills */
+        .skills-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .skills-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-item {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .skill-item i { color: var(--accent-cyan); }
+
+        /* Mascot Assistant */
+        .mascot-wrapper {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 99;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .mascot-avatar {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 50%;
+            padding: 3px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0,242,254,0.3);
+            animation: mascotFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes mascotFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .mascot-avatar img {
+            width: 100%; height: 100%;
+            border-radius: 50%; object-fit: cover;
+        }
+
+        .mascot-bubble {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--accent-cyan);
+            padding: 10px 14px; border-radius: 14px;
+            font-size: 0.8rem; color: var(--text-main);
+            max-width: 220px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* CLI Button */
+        .cli-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 220px;
+            background: rgba(18, 22, 33, 0.9);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 99;
+            box-shadow: 0 0 15px rgba(0,242,254,0.2);
+        }
+
+        .cli-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            z-index: 2000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        }
+
+        .cli-modal.active { opacity: 1; pointer-events: auto; }
+
+        .cli-window {
+            width: 90%; max-width: 680px; height: 420px;
+            background: #080c14; border: 1px solid var(--accent-cyan);
+            border-radius: 12px; box-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
+            display: flex; flex-direction: column;
+            font-family: 'JetBrains Mono', monospace; overflow: hidden;
+        }
+
+        .cli-header {
+            background: #0f172a; padding: 10px 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--accent-cyan); font-size: 0.85rem;
+        }
+
+        .cli-body {
+            flex: 1; padding: 16px; overflow-y: auto;
+            color: #38bdf8; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;
+        }
+
+        .cli-input-row {
+            display: flex; align-items: center; gap: 8px; padding: 10px 16px;
+            background: #0b1120; border-top: 1px solid var(--card-border);
+        }
+
+        .cli-input-row input {
+            flex: 1; background: none; border: none; outline: none;
+            color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+        }
+
+        /* Status Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-card {
+            background: var(--modal-bg); border: 1px solid var(--accent-cyan);
+            padding: 30px; border-radius: 20px; max-width: 450px; width: 90%;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h3 { color: var(--accent-cyan); font-size: 1.1rem; }
+        .close-modal { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
+
+        .sys-log { font-size: 0.85rem; color: var(--text-sub); display: flex; flex-direction: column; gap: 10px; }
+        .sys-log div { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--card-border); padding-bottom: 6px; }
+
+        /* Audio & SFX Bar */
+        .audio-bar {
+            position: fixed; bottom: 24px; right: 24px;
+            background: var(--card-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border); padding: 8px 14px;
+            border-radius: 40px; display: flex; align-items: center; gap: 10px;
+            z-index: 99;
+        }
+
+        .play-btn, .sfx-btn {
+            width: 32px; height: 32px; background: var(--accent-cyan);
+            border: none; border-radius: 50%; color: #07090e; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .sfx-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--card-border); }
+
+        .audio-info { font-size: 0.78rem; font-weight: 600; color: var(--text-sub); font-family: 'JetBrains Mono', monospace; }
+
+        .toast {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-cyan); color: #07090e;
+            padding: 10px 20px; border-radius: 20px; font-weight: 700;
+            font-size: 0.85rem; opacity: 0; transition: all 0.3s ease; z-index: 3000;
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        footer { text-align: center; margin-top: 50px; color: var(--text-sub); font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
+
+        @media (max-width: 992px) {
+            .dashboard-grid { grid-template-columns: 1fr; margin-top: -50px; }
+            .profile-card { position: relative; top: 0; }
+            .hero-banner { height: 260px; }
+            .cli-btn { right: 20px; bottom: 80px; }
+            .cursor-glow { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Radial Glow Follower -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Announcement Bar -->
+    <div class="announcement-bar" id="announcementBar">
+        <div class="announcement-content">
+            <i class="fa-solid fa-bullhorn" style="color:#00f2fe;"></i> 
+            <span id="announcementText">Welcome to website portofolio Fydz Official!</span>
+        </div>
+        <button onclick="playSFX('click'); document.getElementById('announcementBar').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <canvas id="particleCanvas"></canvas>
+        <div class="top-controls">
+            <div class="widget-box"><i class="fa-solid fa-wifi" style="color:#22c55e;"></i> <span id="pingValue">24 ms</span></div>
+            <div class="widget-box"><i class="fa-regular fa-clock"></i> <span id="liveClock">00:00:00 WIB</span></div>
+            <button class="theme-btn" id="themeToggle" title="Toggle Theme"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <div class="dashboard-grid">
+            
+            <!-- Sidebar -->
+            <aside class="profile-card tilt-card">
+                <div class="avatar-box">
+                    <img src="https://files.catbox.moe/t7xi5c.png" alt="Fydz Official">
+                </div>
+                
+                <div class="status-badge" onclick="playSFX('beep'); openStatusModal();">
+                    <span class="status-dot"></span> Systems Operational <i class="fa-solid fa-circle-info" style="margin-left:4px;"></i>
+                </div>
+
+                <h1>Fydz Official</h1>
+                <div class="role-typing" id="roleText"></div>
+
+                <p class="bio-text">
+                    Pengembang independen yang berfokus pada arsitektur backend, integrasi API, serta otomatisasi sistem berbasis Node.js.
+                </p>
+
+                <div class="social-stack">
+                    <a href="https://wa.me/+6283120264665" target="_blank" class="social-btn" onclick="playSFX('click')">
+                        <i class="fa-brands fa-whatsapp"></i> WhatsApp Contact
+                    </a>
+                    <a href="https://t.me/FydzSpyder" target="_blank" class="social-btn" onclick="playSFX('click')">
+                        <i class="fa-brands fa-telegram"></i> Telegram Direct
+                    </a>
+                    <a href="https://www.tiktok.com/@rafid_bjp01" target="_blank" class="social-btn" onclick="playSFX('click')">
+                        <i class="fa-brands fa-tiktok"></i> TikTok Profile
+                    </a>
+                    <a href="https://www.instagram.com/_rafzz24" target="_blank" class="social-btn" onclick="playSFX('click')">
+                        <i class="fa-brands fa-instagram"></i> Instagram
+                    </a>
+                    <div class="social-btn" onclick="playSFX('click'); copyToClipboard('rafidmurizki08@gmail.com');">
+                        <i class="fa-solid fa-envelope"></i> Copy Gmail
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Area -->
+            <main class="content-area">
+
+                <div class="stats-grid">
+                    <div class="stat-card tilt-card">
+                        <div class="stat-icon"><i class="fa-solid fa-folder-open"></i></div>
+                        <div class="stat-info">
+                            <h4>2 Systems</h4>
+                            <p>Active Web Projects</p>
+                        </div>
+                    </div>
+                    <div class="stat-card tilt-card">
+                        <div class="stat-icon"><i class="fa-solid fa-eye"></i></div>
+                        <div class="stat-info">
+                            <h4 id="visitCount">1</h4>
+                            <p>Page Visits</p>
+                        </div>
+                    </div>
+                    <div class="stat-card tilt-card">
+                        <div class="stat-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                        <div class="stat-info">
+                            <h4 id="visitorDevice">Detecting...</h4>
+                            <p>Visitor Client Info</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Section -->
+                <section>
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-code-branch"></i> Active Web Projects
+                        </h2>
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="projectSearch" placeholder="Search projects...">
+                        </div>
+                    </div>
+
+                    <!-- Category Filter Pills -->
+                    <div class="filter-container">
+                        <button class="filter-pill active" onclick="filterCategory('all', this)">All Projects</button>
+                        <button class="filter-pill" onclick="filterCategory('e-commerce', this)">E-Commerce</button>
+                        <button class="filter-pill" onclick="filterCategory('multi-tool', this)">Multi-Tool</button>
+                    </div>
+
+                    <div class="projects-grid" id="projectsContainer">
+                        
+                        <div class="project-card tilt-card" data-category="e-commerce" data-title="order panel pterodactyl e-commerce service">
+                            <div class="project-header-row">
+                                <span class="project-tag">E-Commerce Service</span>
+                                <button class="star-btn" onclick="playSFX('star'); toggleStar(this)"><i class="fa-solid fa-star"></i> <span class="star-count">12</span></button>
+                            </div>
+                            <h3>Order Panel Pterodactyl</h3>
+                            <p>Platform pemesanan panel Pterodactyl praktis berbasis web dengan sistem pembayaran otomatis, siap diproses dan diserahkan via WhatsApp.</p>
+                            <a href="https://auto-order-panel-taupe.vercel.app/" target="_blank" class="btn-launch" onclick="playSFX('click')">
+                                Launch System <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+
+                        <div class="project-card tilt-card" data-category="multi-tool" data-title="all tools rimuru multi-tool platform">
+                            <div class="project-header-row">
+                                <span class="project-tag">Multi-Tool Platform</span>
+                                <button class="star-btn" onclick="playSFX('star'); toggleStar(this)"><i class="fa-solid fa-star"></i> <span class="star-count">19</span></button>
+                            </div>
+                            <h3>All Tools Rimuru</h3>
+                            <p>Web dashboard multi-tools interaktif yang menyediakan berbagai fitur pemrosesan media, canvas logo generator, dan utilitas web.</p>
+                            <a href="https://all-tools-rimuru.web.id" target="_blank" class="btn-launch" onclick="playSFX('click')">
+                                Launch System <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Skill Section -->
+                <section>
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-microchip"></i> Tech Stack & Environments
+                        </h2>
+                    </div>
+
+                    <div class="skills-card">
+                        <div class="skills-wrapper">
+                            <div class="skill-item"><i class="fa-brands fa-node-js"></i> Node.js</div>
+                            <div class="skill-item"><i class="fa-solid fa-server"></i> Express.js</div>
+                            <div class="skill-item"><i class="fa-brands fa-js"></i> JavaScript (ES6+)</div>
+                            <div class="skill-item"><i class="fa-brands fa-html5"></i> HTML5 / CSS3</div>
+                            <div class="skill-item"><i class="fa-solid fa-terminal"></i> Termux Linux</div>
+                            <div class="skill-item"><i class="fa-solid fa-cubes"></i> Pterodactyl API</div>
+                            <div class="skill-item"><i class="fa-solid fa-network-wired"></i> Webhook & Gateways</div>
+                        </div>
+                    </div>
+                </section>
+
+                <footer>
+                    &copy; 2026 Fydz Official — Built with Precision.
+                </footer>
+
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Floating Mascot Assistant -->
+    <div class="mascot-wrapper">
+        <div class="mascot-avatar" onclick="playSFX('beep'); cycleMascotMessage();">
+            <img src="https://files.catbox.moe/t7xi5c.png" alt="Mascot">
+        </div>
+        <div class="mascot-bubble" id="mascotSpeech">Halo! Butuh bantuan atau bot Node.js? Tanya aku ya! 🤖</div>
+    </div>
+
+    <!-- CLI Terminal Button -->
+    <button class="cli-btn" onclick="playSFX('beep'); toggleCLI();"><i class="fa-solid fa-terminal"></i> [>_ CLI]</button>
+
+    <!-- Terminal CLI Modal -->
+    <div class="cli-modal" id="cliModal">
+        <div class="cli-window">
+            <div class="cli-header">
+                <span><i class="fa-solid fa-terminal"></i> Fydz Cyber Terminal CLI v1.0</span>
+                <button class="close-modal" onclick="playSFX('click'); toggleCLI();"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="cli-body" id="cliBody">
+                <div>Type <strong style="color:var(--accent-cyan);">'help'</strong> or press <strong style="color:var(--accent-cyan);">'TAB'</strong> for auto-complete.</div>
+            </div>
+            <div class="cli-input-row">
+                <span style="color:var(--accent-cyan)">fydz@root:~$</span>
+                <input type="text" id="cliInput" placeholder="Enter command..." autocomplete="off">
+            </div>
+        </div>
+    </div>
+
+    <!-- System Status Modal -->
+    <div class="modal-overlay" id="statusModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-terminal"></i> Core Status Monitor</h3>
+                <button class="close-modal" onclick="playSFX('click'); closeStatusModal();"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="sys-log">
+                <div><span>Server Environment:</span> <strong style="color:var(--accent-cyan);">Pterodactyl Node</strong></div>
+                <div><span>Core Runtime:</span> <strong>Node.js v20.x</strong></div>
+                <div><span>Memory Allocated:</span> <strong>2048 MB</strong></div>
+                <div><span>Tunnel Gateway:</span> <strong style="color:#22c55e;">Cloudflare Active</strong></div>
+                <div><span>Database Endpoint:</span> <strong style="color:#22c55e;">Connected (Firebase)</strong></div>
+                <div><span>Status Code:</span> <strong style="color:#22c55e;">200 OK</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <!-- Audio & SFX Bar Controls -->
+    <div class="audio-bar">
+        <button class="sfx-btn" id="sfxToggle" title="Toggle Sound Effects" onclick="toggleSFX()"><i class="fa-solid fa-volume-high" id="sfxIcon"></i></button>
+        <button class="play-btn" id="musicToggle"><i class="fa-solid fa-play" id="musicIcon"></i></button>
+        <div class="audio-info" id="audioStatus">Soundtrack: Off</div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 1. Mouse Glow Follower
+        const glow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        // 2. Synthesized Web Audio API SFX
+        let sfxEnabled = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSFX(type) {
+            if (!sfxEnabled) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+            if (type === 'click') {
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.05);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.start(now); osc.stop(now + 0.05);
+            } else if (type === 'beep') {
+                osc.frequency.setValueAtTime(800, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now); osc.stop(now + 0.08);
+            } else if (type === 'star') {
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.06);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now); osc.stop(now + 0.15);
+            }
+        }
+
+        function toggleSFX() {
+            sfxEnabled = !sfxEnabled;
+            document.getElementById('sfxIcon').className = sfxEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+        }
+
+        // 3. Dynamic Typing Effect for Role
+        const roles = ["<Node.js & Automation />", "<Backend Scripting />", "<Pterodactyl Developer />"];
+        let roleIdx = 0, charIdx = 0, isDeleting = false;
+        const roleEl = document.getElementById('roleText');
+
+        function typeRole() {
+            const current = roles[roleIdx];
+            if (isDeleting) roleEl.textContent = current.substring(0, charIdx--);
+            else roleEl.textContent = current.substring(0, charIdx++);
+
+            let typeSpeed = isDeleting ? 40 : 80;
+            if (!isDeleting && charIdx === current.length + 1) {
+                typeSpeed = 2000; isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false; roleIdx = (roleIdx + 1) % roles.length; typeSpeed = 500;
+            }
+            setTimeout(typeRole, typeSpeed);
+        }
+        typeRole();
+
+        // 4. Dynamic Announcement
+        const announcements = [
+            "Welcome to website portofolio Fydz Official!",
+            "Need Node.js backend automation or API integration? Contact me via Socials!",
+            "Explore all active web systems and multi-tools below!"
+        ];
+        let annIdx = 0;
+        setInterval(() => {
+            annIdx = (annIdx + 1) % announcements.length;
+            const annEl = document.getElementById('announcementText');
+            annEl.style.opacity = 0;
+            setTimeout(() => {
+                annEl.textContent = announcements[annIdx];
+                annEl.style.opacity = 1;
+            }, 300);
+        }, 4000);
+
+        // 5. Theme Switcher
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        themeToggle.addEventListener('click', () => {
+            playSFX('click');
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            themeIcon.className = newTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+        });
+
+        // 6. Live Clock & Simulated Ping
+        function updateClock() {
+            document.getElementById('liveClock').textContent = new Date().toLocaleTimeString('id-ID', { hour12: false }) + ' WIB';
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        setInterval(() => {
+            document.getElementById('pingValue').textContent = (Math.floor(Math.random() * 15) + 18) + " ms";
+        }, 3000);
+
+        // 7. Detect Visitor Client Device
+        function detectDevice() {
+            const ua = navigator.userAgent;
+            let platform = "Mobile";
+            if (/Windows/i.test(ua)) platform = "Win PC";
+            else if (/Macintosh/i.test(ua)) platform = "macOS";
+            else if (/Linux/i.test(ua)) platform = "Linux";
+            else if (/Android/i.test(ua)) platform = "Android";
+            else if (/iPhone|iPad/i.test(ua)) platform = "iOS";
+
+            document.getElementById('visitorDevice').textContent = platform;
+        }
+        detectDevice();
+
+        // 8. 3D Card Tilt
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                card.style.transform = `perspective(1000px) rotateX(${(-y / rect.height) * 10}deg) rotateY(${(x / rect.width) * 10}deg) translateZ(8px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+            });
+        });
+
+        // 9. Particle Canvas
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+        for (let i = 0; i < 35; i++) {
+            particles.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 1, dx: (Math.random() - 0.5) * 0.8, dy: (Math.random() - 0.5) * 0.8
+            });
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 242, 254, 0.4)'; ctx.strokeStyle = 'rgba(0, 242, 254, 0.1)';
+            particles.forEach((p, index) => {
+                p.x += p.dx; p.y += p.dy;
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+                for (let j = index + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    if (Math.hypot(p.x - p2.x, p.y - p2.y) < 100) {
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // 10. Category Filter
+        function filterCategory(category, btn) {
+            playSFX('click');
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.project-card').forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 11. Interactive Terminal CLI + Auto-Complete
+        function toggleCLI() { document.getElementById('cliModal').classList.toggle('active'); }
+
+        const cliInput = document.getElementById('cliInput');
+        const cliBody = document.getElementById('cliBody');
+        const validCmds = ['help', 'skills', 'projects', 'contact', 'clear', 'ping'];
+
+        cliInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const val = cliInput.value.trim();
+                const match = validCmds.find(c => c.startsWith(val));
+                if (match) cliInput.value = match;
+            } else if (e.key === 'Enter') {
+                playSFX('beep');
+                const cmd = cliInput.value.trim().toLowerCase();
+                const line = document.createElement('div');
+                line.innerHTML = `<span style="color:var(--accent-cyan)">fydz@root:~$</span> ${cliInput.value}`;
+                cliBody.appendChild(line);
+                cliInput.value = '';
+
+                let reply = document.createElement('div');
+                reply.style.color = '#e2e8f0';
+
+                switch(cmd) {
+                    case 'help':
+                        reply.innerHTML = 'Available commands: <strong style="color:var(--accent-cyan)">help, skills, projects, contact, clear, ping</strong>';
+                        break;
+                    case 'skills':
+                        reply.textContent = 'Tech Stack: Node.js, Express.js, JavaScript (ES6+), HTML5/CSS3, Termux, Pterodactyl API';
+                        break;
+                    case 'projects':
+                        reply.textContent = 'Projects: 1. Order Panel Pterodactyl | 2. All Tools Rimuru';
+                        break;
+                    case 'contact':
+                        reply.textContent = 'Socials: WA (+6283120264665), Telegram (@FydzSpyder), TikTok (@rafid_bjp01)';
+                        break;
+                    case 'ping':
+                        reply.textContent = 'Pong! System latency is normal.';
+                        break;
+                    case 'clear':
+                        cliBody.innerHTML = ''; return;
+                    default:
+                        reply.style.color = '#ef4444';
+                        reply.textContent = `Command not found: '${cmd}'. Press TAB for auto-complete.`;
+                }
+                cliBody.appendChild(reply);
+                cliBody.scrollTop = cliBody.scrollHeight;
+            }
+        });
+
+        // 12. Mascot Messages
+        const mascotMsgs = [
+            "Gunakan Dark Mode biar matamu nggak gampang capek!",
+            "Tertarik dengan Order Panel Pterodactyl? Langsung klik tombol launch ya!",
+            "Web ini dibuat penuh dengan Node.js & Termux power ⚡",
+            "Coba buka Terminal CLI di pojok kanan bawah!"
+        ];
+        let mascotIdx = 0;
+        function cycleMascotMessage() {
+            mascotIdx = (mascotIdx + 1) % mascotMsgs.length;
+            document.getElementById('mascotSpeech').textContent = mascotMsgs[mascotIdx];
+        }
+
+        // 13. Star System
+        function toggleStar(btn) {
+            btn.classList.toggle('starred');
+            let countEl = btn.querySelector('.star-count');
+            let count = parseInt(countEl.textContent);
+            countEl.textContent = btn.classList.contains('starred') ? count + 1 : count - 1;
+        }
+
+        // 14. Copy to Clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 2500);
+        }
+
+        // 15. Visitor Counter & Status Modal
+        let visits = localStorage.getItem('fydz_visits') || 0;
+        visits++; localStorage.setItem('fydz_visits', visits);
+        document.getElementById('visitCount').textContent = visits + " Visits";
+
+        function openStatusModal() { document.getElementById('statusModal').classList.add('active'); }
+        function closeStatusModal() { document.getElementById('statusModal').classList.remove('active'); }
+
+        // 16. Audio Control
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = document.getElementById('musicIcon');
+        const bgMusic = document.getElementById('bgMusic');
+        let isPlaying = false;
+        musicToggle.addEventListener('click', () => {
+            playSFX('click');
+            if (isPlaying) {
+                bgMusic.pause(); musicIcon.className = 'fa-solid fa-play';
+                document.getElementById('audioStatus').textContent = 'Soundtrack: Off';
+            } else {
+                bgMusic.play(); musicIcon.className = 'fa-solid fa-pause';
+                document.getElementById('audioStatus').textContent = 'Soundtrack: Playing';
+            }
+            isPlaying = !isPlaying;
+        });
+    </script>
+</body>
+</html>
